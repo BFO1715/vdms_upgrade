@@ -5,14 +5,18 @@
 package com.mycompany.vehicledealershipmanagementsystem;
 
 import java.util.Scanner;
+
+import devtools.io.Data;
+
 /**
  *
  * @author bethan
  */
 // Main class to interact with system operator
 public class VehicleDealershipManagementSystem {
-    private static Vehicle[] vehicles = new Vehicle[10];
-    private static int vehicleCount = 0;
+    @Data
+    public static Vehicle[] vehicles = new Vehicle[10];
+    public static int vehicleCount = 0;
 
     public static void main(String[] args) {
         
