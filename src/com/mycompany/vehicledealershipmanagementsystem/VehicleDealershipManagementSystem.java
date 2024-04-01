@@ -1,6 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- */
 package com.mycompany.vehicledealershipmanagementsystem;
 
 import java.util.ArrayList;
@@ -10,7 +7,11 @@ import devtools.io.Data;
 import devtools.io.DataManager;
 import java.io.Serializable;
 import java.time.Year;
-
+/**
+ *
+ * @author bethan
+ */
+// Main class to interact with system operator
 public class VehicleDealershipManagementSystem implements Serializable {
     @Data
     public List<Vehicle> vehicles = new ArrayList<>();
@@ -149,7 +150,7 @@ public class VehicleDealershipManagementSystem implements Serializable {
         }
     }
 
-    // Utility methods for input validation
+    // Input validation
     private static String getValidInput(Scanner scanner, String[] validOptions, String prompt, String errorMessage) {
         String input;
         boolean isValid;
