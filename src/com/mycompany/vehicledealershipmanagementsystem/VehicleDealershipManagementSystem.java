@@ -135,8 +135,40 @@ public class VehicleDealershipManagementSystem implements Serializable {
     private void printVehicles() {
         if (vehicles.isEmpty()) {
             System.out.println("No vehicles currently in the system.");
-        } else {
-            vehicles.forEach(System.out::println);
+            return;
+        }
+
+        String header = String.format("%-10s | %-15s | %-10s | %-5s | %-10s | %-8s | %-7s | %-25s", 
+                                      "Type", "Make", "Model", "Year", "Gearbox", "Color", "Mileage", "Extras");
+        System.out.println(header);
+        System.out.println(new String(new char[header.length()]).replace("\0", "-")); // Dynamic line separator
+
+        for (Vehicle vehicle : vehicles) {
+            String type = vehicle instanceof Car ? "Car" : "Motorbike";
+            String extras = "";
+
+            if (vehicle instanceof Car) {
+                Car car = (Car) vehicle;
+                List<String> extraFeatures = new ArrayList<>();
+                if (car.hasSatNav()) extraFeatures.add("SatNav");
+                if (car.hasParkingSensors()) extraFeatures.add("Sensors");
+                if (car.hasTowBar()) extraFeatures.add("TowBar");
+                if (car.hasRoofRack()) extraFeatures.add("RoofRack");
+                extras = String.join(", ", extraFeatures);
+            } else if (vehicle instanceof Motorbike) {
+                Motorbike bike = (Motorbike) vehicle;
+                extras = bike.hasLuggageBox() ? "Luggage Box" : "";
+            }
+
+            System.out.printf("%-10s | %-15s | %-10s | %-5d | %-10s | %-8s | %-7d | %-25s%n", 
+                              type, 
+                              vehicle.getMake(), 
+                              vehicle.getModel(), 
+                              vehicle.getYear(), 
+                              vehicle.getGearboxType(), 
+                              vehicle.getColor(), 
+                              vehicle.getMileage(), 
+                              extras);
         }
     }
 
