@@ -3,6 +3,7 @@ package com.mycompany.vehicledealershipmanagementsystem;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 import devtools.io.Data;
 import devtools.io.DataManager;
 import java.io.Serializable;
@@ -30,9 +31,10 @@ public class VehicleDealershipManagementSystem implements Serializable {
             System.out.println("Select action: \n" +
                     "1. Add a new vehicle \n" +
                     "2. Update vehicle \n" +
-                    "3. Print all vehicles \n" +
-                    "4. Delete a vehicle \n" +
-                    "5. Exit");
+                    "3. Search vehicles \n" +
+                    "4. Print all vehicles \n" +
+                    "5. Delete a vehicle \n" +
+                    "6. Exit") ;
             input = scanner.nextLine();
 
             switch (input) {
@@ -43,12 +45,15 @@ public class VehicleDealershipManagementSystem implements Serializable {
                     updateVehicle(scanner);
                     break;
                 case "3":
-                    printVehicles();
+                    searchVehicles(scanner);
                     break;
                 case "4":
-                    deleteVehicle(scanner);
+                    printVehicles();
                     break;
                 case "5":
+                    deleteVehicle(scanner);
+                    break;
+                case "6":
                     System.out.println("Exiting...");
                     return;
                 default:
@@ -135,6 +140,46 @@ public class VehicleDealershipManagementSystem implements Serializable {
         }
     }
 
+    private void searchVehicles(Scanner scanner) {
+        System.out.println("Search by: \n1. VIN\n2. Make\n3. Model");
+        String choice = scanner.nextLine().trim();
+        List<Vehicle> foundVehicles = new ArrayList<>();
+
+        switch (choice) {
+            case "1":
+                System.out.println("Enter VIN:");
+                String vin = scanner.nextLine().trim();
+                foundVehicles = vehicles.stream()
+                                        .filter(v -> v.getVin().equals(vin))
+                                        .collect(Collectors.toList());
+                break;
+            case "2":
+                System.out.println("Enter Make:");
+                String make = scanner.nextLine().trim();
+                foundVehicles = vehicles.stream()
+                                        .filter(v -> v.getMake().equalsIgnoreCase(make))
+                                        .collect(Collectors.toList());
+                break;
+            case "3":
+                System.out.println("Enter Model:");
+                String model = scanner.nextLine().trim();
+                foundVehicles = vehicles.stream()
+                                        .filter(v -> v.getModel().equalsIgnoreCase(model))
+                                        .collect(Collectors.toList());
+                break;
+            default:
+                System.out.println("Invalid option, please try again.");
+                return;
+        }
+
+        if (foundVehicles.isEmpty()) {
+            System.out.println("No vehicles found.");
+        } else {
+            System.out.println("Found Vehicles:");
+            foundVehicles.forEach(System.out::println);
+        }
+    }
+
     private void addCarOptions(Scanner scanner, Car car) {
         if (getYesNoInput(scanner, "Does the car have sat nav? (yes/no):")) {
             car.addSatNav();
@@ -150,8 +195,8 @@ public class VehicleDealershipManagementSystem implements Serializable {
         }
     }
 
-    // Input validation
-    private static String getValidInput(Scanner scanner, String[] validOptions, String prompt, String errorMessage) {
+    // Input validation methods
+    private String getValidInput(Scanner scanner, String[] validOptions, String prompt, String errorMessage) {
         String input;
         boolean isValid;
         do {
@@ -165,7 +210,7 @@ public class VehicleDealershipManagementSystem implements Serializable {
         return input;
     }
 
-    private static boolean getYesNoInput(Scanner scanner, String prompt) {
+    private boolean getYesNoInput(Scanner scanner, String prompt) {
         String input;
         do {
             System.out.println(prompt);
@@ -174,7 +219,7 @@ public class VehicleDealershipManagementSystem implements Serializable {
         return input.equals("yes");
     }
 
-    private static int getInputYear(Scanner scanner, int min, int max) {
+    private int getInputYear(Scanner scanner, int min, int max) {
         int year;
         do {
             System.out.println("Enter year (" + min + " - " + max + "):");
@@ -188,7 +233,7 @@ public class VehicleDealershipManagementSystem implements Serializable {
         return year;
     }
 
-    private static int getInputPositiveInteger(Scanner scanner, String prompt, int min, int max) {
+    private int getInputPositiveInteger(Scanner scanner, String prompt, int min, int max) {
         int number;
         do {
             System.out.println(prompt);
@@ -203,17 +248,16 @@ public class VehicleDealershipManagementSystem implements Serializable {
     }
 
     private String getUniqueVin(Scanner scanner) {
-    String vin;
-    do {
-        System.out.println("Enter VIN (7 digits long):");
-        vin = scanner.nextLine();
-        // Declare a final variable to use within lambda
-        final String finalVin = vin;
-        if (vin.length() != 7 || vehicles.stream().anyMatch(v -> v.getVin().equals(finalVin))) {
-            System.out.println("VIN must be 7 digits long and unique. Try again.");
-            vin = ""; // Reset vin to trigger the loop again if validation fails
-        }
-    } while (vin.isEmpty());
-    return vin;
-}
+        String vin;
+        do {
+            System.out.println("Enter VIN (7 digits long):");
+            vin = scanner.nextLine();
+            final String finalVin = vin;
+            if (vin.length() != 7 || vehicles.stream().anyMatch(v -> v.getVin().equals(finalVin))) {
+                System.out.println("VIN must be 7 digits long and unique. Try again.");
+                vin = ""; // Reset vin to trigger the loop again if validation fails
+            }
+        } while (vin.isEmpty());
+        return vin;
+    }
 }
