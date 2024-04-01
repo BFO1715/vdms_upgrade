@@ -3,14 +3,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.mycompany.vehicledealershipmanagementsystem;
-
-
+import java.io.Serializable;
 /**
  *
  * @author bethan
  */
 // Car class
-public class Car extends Vehicle {
+public class Car extends Vehicle implements Serializable {
     private String bodyType;
     private boolean hasSatNav;
     private boolean hasParkingSensors;

@@ -3,14 +3,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.mycompany.vehicledealershipmanagementsystem;
-
-
+import java.io.Serializable;
 /**
  *
  * @author bethan
  */
 // Motorbike class
-public class Motorbike extends Vehicle {
+public class Motorbike extends Vehicle implements Serializable {
     private boolean hasLuggageBox;
 
     public Motorbike(String make, String model, int year, String gearboxType, String color, int mileage, String vin) {

@@ -3,13 +3,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.mycompany.vehicledealershipmanagementsystem;
-
+import java.io.Serializable;
 /**
  *
  * @author bethan
  */
 // Base Vehicle class
-public abstract class Vehicle {
+public abstract class Vehicle implements Serializable {
     private final String make;
     private final String model;
     private final int year;

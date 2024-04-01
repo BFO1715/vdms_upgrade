@@ -1,24 +1,26 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  */
-
 package com.mycompany.vehicledealershipmanagementsystem;
 
 import java.util.Scanner;
-
 import devtools.io.Data;
+import devtools.io.DataManager;
+import java.io.Serializable;
 
 /**
  *
  * @author bethan
  */
 // Main class to interact with system operator
-public class VehicleDealershipManagementSystem {
+public class VehicleDealershipManagementSystem implements Serializable {
     @Data
     public static Vehicle[] vehicles = new Vehicle[10];
     public static int vehicleCount = 0;
 
     public static void main(String[] args) {
+        
+        DataManager.start(VehicleDealershipManagementSystem.class);
         
         Scanner scanner = new Scanner(System.in);
         String input;
@@ -46,7 +48,7 @@ public class VehicleDealershipManagementSystem {
         scanner.close();
     }
 
-    private static void addVehicle(Scanner scanner) {
+    public static void addVehicle(Scanner scanner) {
         String type = getValidInput(scanner, new String[]{"car", "motorbike"}, "Enter type of vehicle (car/motorbike):", "Invalid option, please select from options provided.");
 
         System.out.println("Enter make:");
@@ -96,21 +98,21 @@ public class VehicleDealershipManagementSystem {
         }
     }
 
-    private static void resizeArray() {
+    public static void resizeArray() {
         Vehicle[] newVehicles = new Vehicle[vehicles.length * 2];
         System.arraycopy(vehicles, 0, newVehicles, 0, vehicles.length);
         vehicles = newVehicles;
         System.out.println("Array resized: New capacity is " + vehicles.length);
     }
 
-    private static void printVehicles() {
+    public static void printVehicles() {
         System.out.println("Vehicles in the system:");
         for (int i = 0; i < vehicleCount; i++) {
             System.out.println(vehicles[i]);
         }
     }
 
-    private static void updateVehicle(Scanner scanner) {
+    public static void updateVehicle(Scanner scanner) {
         System.out.println("Enter the VIN of the vehicle to update:");
         String vin = scanner.nextLine();
 
@@ -144,7 +146,7 @@ public class VehicleDealershipManagementSystem {
         System.out.println("Vehicle with VIN " + vin + " not found.");
     }
 
-    private static void addCarOptions(Scanner scanner, Car car) {
+    public static void addCarOptions(Scanner scanner, Car car) {
         if (getYesNoInput(scanner, "Add sat nav? (yes/no)")) {
             car.addSatNav();
         }
@@ -159,7 +161,7 @@ public class VehicleDealershipManagementSystem {
         }
     }
 
-    private static boolean getYesNoInput(Scanner scanner, String prompt) {
+    public static boolean getYesNoInput(Scanner scanner, String prompt) {
         String input;
         do {
             System.out.println(prompt);
@@ -168,7 +170,7 @@ public class VehicleDealershipManagementSystem {
         return "yes".equalsIgnoreCase(input);
     }
 
-    private static String getValidInput(Scanner scanner, String[] validOptions, String prompt, String errorMessage) {
+    public static String getValidInput(Scanner scanner, String[] validOptions, String prompt, String errorMessage) {
         while (true) {
             System.out.println(prompt);
             String input = scanner.nextLine();

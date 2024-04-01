@@ -3,14 +3,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.mycompany.vehicledealershipmanagementsystem;
-
-
+import java.io.Serializable;
 /**
  *
  * @author bethan
  */
 // SUV Car class
-public class SUV extends Car {
+public class SUV extends Car implements Serializable {
     private boolean hasAllWheelDrive;
 
     public SUV(String make, String model, int year, String gearboxType, String color, int mileage, String vin, String bodyType) {
