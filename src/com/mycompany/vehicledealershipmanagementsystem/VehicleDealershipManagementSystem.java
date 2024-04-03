@@ -157,19 +157,20 @@ public class VehicleDealershipManagementSystem implements Serializable {
         }
     }
 
-    private void printVehicles() {
-        if (vehicles.isEmpty()) {
-            System.out.println("No vehicles currently in the system.");
+    private void printVehicleList(List<Vehicle> vehiclesToPrint) {
+        if (vehiclesToPrint.isEmpty()) {
+            System.out.println("No vehicles found.");
             return;
         }
 
-        String header = String.format("%-10s | %-15s | %-10s | %-5s | %-10s | %-8s | %-7s | %-25s", 
-                                      "Type", "Make", "Model", "Year", "Gearbox", "Color", "Mileage", "Extras");
+        String header = String.format("%-8s | %-10s | %-15s | %-10s | %-5s | %-10s | %-6s | %-8s | %-7s | %-25s", 
+                                      "VIN", "Type", "Make", "Model", "Year", "Body Type", "Gearbox", "Color", "Mileage", "Extras");
         System.out.println(header);
         System.out.println(new String(new char[header.length()]).replace("\0", "-")); // Dynamic line separator
 
-        for (Vehicle vehicle : vehicles) {
+        for (Vehicle vehicle : vehiclesToPrint) {
             String type = vehicle instanceof Car ? "Car" : "Motorbike";
+            String bodyType = vehicle instanceof Car ? ((Car) vehicle).getBodyType() : "N/A";
             List<String> extraFeatures = new ArrayList<>();
 
             if (vehicle instanceof Car) {
@@ -180,13 +181,11 @@ public class VehicleDealershipManagementSystem implements Serializable {
                 if (car.hasRoofRack()) extraFeatures.add("RoofRack");
             }
 
-            // Check for SUV features
             if (vehicle instanceof SUV) {
                 SUV suv = (SUV) vehicle;
                 if (suv.hasAllWheelDrive()) extraFeatures.add("All-Wheel Drive");
             }
 
-            // Check for Estate features
             if (vehicle instanceof Estate) {
                 Estate estate = (Estate) vehicle;
                 if (estate.hasThirdRowSeat()) extraFeatures.add("Third Row Seat");
@@ -199,16 +198,24 @@ public class VehicleDealershipManagementSystem implements Serializable {
 
             String extras = String.join(", ", extraFeatures);
 
-            System.out.printf("%-10s | %-15s | %-10s | %-5d | %-10s | %-8s | %-7d | %-25s%n", 
+            System.out.printf("%-8s | %-10s | %-15s | %-10s | %-5d | %-10s | %-6s | %-8s | %-7d | %-25s%n", 
+                              vehicle.getVin(), 
                               type, 
                               vehicle.getMake(), 
                               vehicle.getModel(), 
                               vehicle.getYear(), 
+                              bodyType, 
                               vehicle.getGearboxType(), 
                               vehicle.getColor(), 
                               vehicle.getMileage(), 
                               extras);
         }
+
+        System.out.println(new String(new char[header.length()]).replace("\0", "-")); // Print a final line separator at the end
+    }
+
+    private void printVehicles() {
+        printVehicleList(this.vehicles); // This line replaces the previous implementation of printVehicles
     }
 
     private void searchVehicles(Scanner scanner) {
@@ -220,21 +227,21 @@ public class VehicleDealershipManagementSystem implements Serializable {
             case "1":
                 System.out.println("Enter VIN:");
                 String vin = scanner.nextLine().trim();
-                foundVehicles = vehicles.stream()
+                foundVehicles = this.vehicles.stream()
                                         .filter(v -> v.getVin().equals(vin))
                                         .collect(Collectors.toList());
                 break;
             case "2":
                 System.out.println("Enter Make:");
                 String make = scanner.nextLine().trim();
-                foundVehicles = vehicles.stream()
+                foundVehicles = this.vehicles.stream()
                                         .filter(v -> v.getMake().equalsIgnoreCase(make))
                                         .collect(Collectors.toList());
                 break;
             case "3":
                 System.out.println("Enter Model:");
                 String model = scanner.nextLine().trim();
-                foundVehicles = vehicles.stream()
+                foundVehicles = this.vehicles.stream()
                                         .filter(v -> v.getModel().equalsIgnoreCase(model))
                                         .collect(Collectors.toList());
                 break;
@@ -243,12 +250,7 @@ public class VehicleDealershipManagementSystem implements Serializable {
                 return;
         }
 
-        if (foundVehicles.isEmpty()) {
-            System.out.println("No vehicles found.");
-        } else {
-            System.out.println("Found Vehicles:");
-            foundVehicles.forEach(System.out::println);
-        }
+        printVehicleList(foundVehicles); // Use the new method to print search results
     }
 
     private void addCarOptions(Scanner scanner, Car car) {
