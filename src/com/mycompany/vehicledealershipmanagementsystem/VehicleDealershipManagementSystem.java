@@ -83,11 +83,36 @@ public class VehicleDealershipManagementSystem implements Serializable {
 
         Vehicle vehicle = null;
         if ("car".equals(type)) {
-            String bodyType = getValidInput(scanner, new String[]{"saloon", "estate", "hatchback", "SUV"}, "Enter body type (saloon/estate/hatchback/SUV):", "Invalid option, please select from options provided.");
-            vehicle = new Car(make, model, year, gearboxType, color, mileage, vin, bodyType);
+            // Convert valid options to lowercase
+            String bodyType = getValidInput(scanner, new String[]{"saloon", "estate", "hatchback", "suv"}, "Enter body type (saloon/estate/hatchback/SUV):", "Invalid option, please select from options provided.");
+
+            switch (bodyType) {
+                case "estate":
+                    vehicle = new Estate(make, model, year, gearboxType, color, mileage, vin, bodyType);
+                    boolean hasThirdRowSeat = getYesNoInput(scanner, "Does the estate have a third row seat? (yes/no):");
+                    if (hasThirdRowSeat) {
+                        ((Estate) vehicle).addThirdRowSeat();
+                    }
+                    break;
+                case "suv":
+                    vehicle = new SUV(make, model, year, gearboxType, color, mileage, vin, bodyType);
+                    boolean hasAllWheelDrive = getYesNoInput(scanner, "Does the SUV have all-wheel drive? (yes/no):");
+                    if (hasAllWheelDrive) {
+                        ((SUV) vehicle).addAllWheelDrive();
+                    }
+                    break;
+                default:
+                    vehicle = new Car(make, model, year, gearboxType, color, mileage, vin, bodyType);
+                    break;
+            }
             addCarOptions(scanner, (Car)vehicle);
         } else if ("motorbike".equals(type)) {
             vehicle = new Motorbike(make, model, year, gearboxType, color, mileage, vin);
+            // Add the step to ask for the luggage box option
+            boolean hasLuggageBox = getYesNoInput(scanner, "Does the motorbike have a luggage box? (yes/no):");
+            if (hasLuggageBox) {
+                ((Motorbike) vehicle).addLuggageBox();
+            }
         }
 
         if (vehicle != null) {
@@ -145,20 +170,34 @@ public class VehicleDealershipManagementSystem implements Serializable {
 
         for (Vehicle vehicle : vehicles) {
             String type = vehicle instanceof Car ? "Car" : "Motorbike";
-            String extras = "";
+            List<String> extraFeatures = new ArrayList<>();
 
             if (vehicle instanceof Car) {
                 Car car = (Car) vehicle;
-                List<String> extraFeatures = new ArrayList<>();
                 if (car.hasSatNav()) extraFeatures.add("SatNav");
                 if (car.hasParkingSensors()) extraFeatures.add("Sensors");
                 if (car.hasTowBar()) extraFeatures.add("TowBar");
                 if (car.hasRoofRack()) extraFeatures.add("RoofRack");
-                extras = String.join(", ", extraFeatures);
-            } else if (vehicle instanceof Motorbike) {
-                Motorbike bike = (Motorbike) vehicle;
-                extras = bike.hasLuggageBox() ? "Luggage Box" : "";
             }
+
+            // Check for SUV features
+            if (vehicle instanceof SUV) {
+                SUV suv = (SUV) vehicle;
+                if (suv.hasAllWheelDrive()) extraFeatures.add("All-Wheel Drive");
+            }
+
+            // Check for Estate features
+            if (vehicle instanceof Estate) {
+                Estate estate = (Estate) vehicle;
+                if (estate.hasThirdRowSeat()) extraFeatures.add("Third Row Seat");
+            }
+
+            if (vehicle instanceof Motorbike) {
+                Motorbike bike = (Motorbike) vehicle;
+                if (bike.hasLuggageBox()) extraFeatures.add("Luggage Box");
+            }
+
+            String extras = String.join(", ", extraFeatures);
 
             System.out.printf("%-10s | %-15s | %-10s | %-5d | %-10s | %-8s | %-7d | %-25s%n", 
                               type, 
