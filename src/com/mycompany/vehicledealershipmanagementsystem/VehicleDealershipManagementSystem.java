@@ -83,7 +83,6 @@ public class VehicleDealershipManagementSystem implements Serializable {
 
         Vehicle vehicle = null;
         if ("car".equals(type)) {
-            // Convert valid options to lowercase
             String bodyType = getValidInput(scanner, new String[]{"saloon", "estate", "hatchback", "suv"}, "Enter body type (saloon/estate/hatchback/SUV):", "Invalid option, please select from options provided.");
 
             switch (bodyType) {
@@ -108,7 +107,6 @@ public class VehicleDealershipManagementSystem implements Serializable {
             addCarOptions(scanner, (Car)vehicle);
         } else if ("motorbike".equals(type)) {
             vehicle = new Motorbike(make, model, year, gearboxType, color, mileage, vin);
-            // Add the step to ask for the luggage box option
             boolean hasLuggageBox = getYesNoInput(scanner, "Does the motorbike have a luggage box? (yes/no):");
             if (hasLuggageBox) {
                 ((Motorbike) vehicle).addLuggageBox();
@@ -268,7 +266,7 @@ public class VehicleDealershipManagementSystem implements Serializable {
         }
     }
 
-    // Input validation methods
+    // Validation 
     private String getValidInput(Scanner scanner, String[] validOptions, String prompt, String errorMessage) {
         String input;
         boolean isValid;
@@ -298,10 +296,10 @@ public class VehicleDealershipManagementSystem implements Serializable {
             System.out.println("Enter year (" + min + " - " + max + "):");
             while (!scanner.hasNextInt()) {
                 System.out.println("That's not a valid year!");
-                scanner.next(); // Important for avoiding infinite loop
+                scanner.next(); 
             }
             year = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
+            scanner.nextLine(); 
         } while (year < min || year > max);
         return year;
     }
@@ -312,10 +310,10 @@ public class VehicleDealershipManagementSystem implements Serializable {
             System.out.println(prompt);
             while (!scanner.hasNextInt()) {
                 System.out.println("That's not a number!");
-                scanner.next(); // Important for avoiding infinite loop
+                scanner.next(); 
             }
             number = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
+            scanner.nextLine(); 
         } while (number < min || number > max);
         return number;
     }
@@ -328,7 +326,7 @@ public class VehicleDealershipManagementSystem implements Serializable {
             final String finalVin = vin;
             if (vin.length() != 7 || vehicles.stream().anyMatch(v -> v.getVin().equals(finalVin))) {
                 System.out.println("VIN must be 7 digits long and unique. Try again.");
-                vin = ""; // Reset vin to trigger the loop again if validation fails
+                vin = ""; 
             }
         } while (vin.isEmpty());
         return vin;
