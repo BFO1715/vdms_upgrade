@@ -138,6 +138,16 @@ public class VehicleDealershipManagementSystem implements Serializable {
                 vehicle.setMileage(newMileage);
             }
 
+            if (vehicle instanceof Motorbike) {
+                Motorbike motorbike = (Motorbike) vehicle;
+                boolean hasLuggageBox = getYesNoInput(scanner, "Does the motorbike have a luggage box? (yes/no):");
+                if (hasLuggageBox) {
+                    motorbike.addLuggageBox();
+                } else {
+                    motorbike.removeLuggageBox();
+                }
+            }
+
             System.out.println("Vehicle updated: " + vehicle);
         } else {
             System.out.println("Vehicle with VIN " + vin + " not found.");
@@ -164,7 +174,7 @@ public class VehicleDealershipManagementSystem implements Serializable {
         String header = String.format("%-8s | %-10s | %-15s | %-10s | %-5s | %-10s | %-6s | %-8s | %-7s | %-25s", 
                                       "VIN", "Type", "Make", "Model", "Year", "Body Type", "Gearbox", "Color", "Mileage", "Extras");
         System.out.println(header);
-        System.out.println(new String(new char[header.length()]).replace("\0", "-")); // Dynamic line separator
+        System.out.println(new String(new char[header.length()]).replace("\0", "-")); 
 
         for (Vehicle vehicle : vehiclesToPrint) {
             String type = vehicle instanceof Car ? "Car" : "Motorbike";
@@ -209,11 +219,11 @@ public class VehicleDealershipManagementSystem implements Serializable {
                               extras);
         }
 
-        System.out.println(new String(new char[header.length()]).replace("\0", "-")); // Print a final line separator at the end
+        System.out.println(new String(new char[header.length()]).replace("\0", "-")); 
     }
 
     private void printVehicles() {
-        printVehicleList(this.vehicles); // This line replaces the previous implementation of printVehicles
+        printVehicleList(this.vehicles); 
     }
 
     private void searchVehicles(Scanner scanner) {
